@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AIDS SOC Platform — AI-Driven Cyber Defense Command Center</title>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet"/>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <link rel="stylesheet" href="css/style.css"/>
+  <link rel="stylesheet" href="css/intro.css"/>
+  <link rel="stylesheet" href="css/carousel.css"/>
+  <link rel="stylesheet" href="css/dashboard.css"/>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════ INTRO OVERLAY ═══ -->
+<div id="intro-overlay">
+  <canvas id="intro-canvas"></canvas>
+  <canvas id="intro-matrix-canvas"></canvas>  
+  <div id="intro-logo">
+    <img src="logo.png" alt="AIDS SOC Platform" class="intro-logo-img"/>
+    <div class="intro-logo-text" id="intro-logo-glitch" data-text="AIDS SOC">AIDS SOC</div>
+    <div class="intro-logo-sub" id="intro-logo-sub"></div>
+    <div class="intro-scan-line"></div>
+  </div>
+  <button id="skip-btn" onclick="skipIntro()">SKIP ›</button>
+</div>
+
+<!-- ═══════════════════════════════════════ MAIN PAGE ══════ -->
+<div id="main-page">
+  <canvas id="matrix-bg"></canvas>
+  <div class="vignette"></div>
+
+  <!-- LOGO top-left -->
+  <div id="site-logo">
+    <img src="logo.png" alt="AIDS SOC Platform Logo" class="logo-img"/>
+    <div class="logo-text-wrap">
+      <span class="logo-dot"></span>
+      <span class="logo-name">AIDS <span class="logo-xdr">SOC</span></span>
+      <span class="logo-ver">v4.2</span>
+    </div>
+  </div>
+
+  <!-- LANGUAGE TOGGLE bottom-left -->
+  <div id="lang-toggle">
+    <button class="lang-btn active" id="btn-en" onclick="setLang('en')">EN</button>
+    <span class="lang-sep">|</span>
+    <button class="lang-btn" id="btn-ar" onclick="setLang('ar')">AR</button>
+  </div>
+
+  <!-- ── CAROUSEL SCENE ── -->
+  <div id="carousel-scene">
+    <div id="carousel-wrapper">
+
+      <!-- BLOCK 0: SOC Overview -->
+      <div class="c-block" data-index="0" id="cblock-0">
+        <div class="block-inner" onclick="handleBlockClick(0)">
+          <div class="block-glow"></div>
+          <div class="block-corner tl"></div><div class="block-corner tr"></div>
+          <div class="block-corner bl"></div><div class="block-corner br"></div>
+          <div class="block-label" data-i18n="block1_label">SOC OVERVIEW</div>
+          <div class="block-preview" id="bp-0">
+            <div class="mini-soc-grid" id="mini-soc-stats"></div>
+            <canvas id="mini-map" class="mini-canvas"></canvas>
+            <div class="mini-feed-wrap" id="mini-feed"></div>
+          </div>
+          <div class="block-hint"><span class="hint-arrow">▶</span> <span data-i18n="click_enter">CLICK TO ENTER</span></div>
+        </div>
+      </div>
+
+      <!-- BLOCK 1: AI Pipeline -->
+      <div class="c-block" data-index="1" id="cblock-1">
+        <div class="block-inner" onclick="handleBlockClick(1)">
+          <div class="block-glow" style="--gc:#b66bff"></div>
+          <div class="block-corner tl" style="--cc:#b66bff"></div><div class="block-corner tr" style="--cc:#b66bff"></div>
+          <div class="block-corner bl" style="--cc:#b66bff"></div><div class="block-corner br" style="--cc:#b66bff"></div>
+          <div class="block-label" style="color:var(--purple)" data-i18n="block2_label">AI PIPELINE</div>
+          <div class="block-preview bp-pipeline" id="bp-1">
+            <div class="mini-pl-stages" id="mini-pl-stages"></div>
+            <canvas id="mini-pipe" class="mini-canvas ph-canvas"></canvas>
+          </div>
+          <div class="block-hint"><span class="hint-arrow" style="color:var(--purple)">▶</span> <span data-i18n="click_enter">CLICK TO ENTER</span></div>
+        </div>
+      </div>
+
+      <!-- BLOCK 2: AI Copilot -->
+      <div class="c-block" data-index="2" id="cblock-2">
+        <div class="block-inner" onclick="handleBlockClick(2)">
+          <div class="block-glow" style="--gc:#00e5ff"></div>
+          <div class="block-corner tl" style="--cc:#00e5ff"></div><div class="block-corner tr" style="--cc:#00e5ff"></div>
+          <div class="block-corner bl" style="--cc:#00e5ff"></div><div class="block-corner br" style="--cc:#00e5ff"></div>
+          <div class="block-label" style="color:var(--cyan)" data-i18n="block3_label">AI COPILOT</div>
+          <div class="block-preview bp-copilot" id="bp-2">
+            <div class="mini-cp-chat" id="mini-cp-chat"></div>
+          </div>
+          <div class="block-hint"><span class="hint-arrow" style="color:var(--cyan)">▶</span> <span data-i18n="click_enter">CLICK TO ENTER</span></div>
+        </div>
+      </div>
+
+    </div><!-- end carousel-wrapper -->
+  </div><!-- end carousel-scene -->
+
+  <!-- NAV DOTS -->
+  <div id="carousel-dots">
+    <span class="c-dot active" onclick="goToBlock(0)" title="SOC Overview"></span>
+    <span class="c-dot" onclick="goToBlock(1)" title="AI Pipeline"></span>
+    <span class="c-dot" onclick="goToBlock(2)" title="AI Copilot"></span>
+  </div>
+
+  <!-- NAV ARROWS -->
+  <button class="carousel-arrow left" onclick="prevBlock()">‹</button>
+  <button class="carousel-arrow right" onclick="nextBlock()">›</button>
+
+</div><!-- end main-page -->
+
+<!-- ═══════════════════════════════════════ EXPANDED OVERLAY ═══ -->
+<div id="expanded-overlay">
+  <button id="close-btn" onclick="closeExpanded()" title="Close">✕</button>
+
+  <!-- ── EXPANDED BLOCK 0: Full SOC Dashboard ── -->
+  <div id="exp-0" class="exp-block">
+    <div class="soc-wrap">
+
+      <div class="soc-head reveal-from-top">
+        <div>
+          <h1 class="soc-title">SOC <span data-i18n="soc_title_span">OVERVIEW</span></h1>
+          <div class="soc-sub" data-i18n="soc_sub">REAL-TIME GLOBAL CYBER DEFENSE COMMAND CENTER</div>
+        </div>
+        <div class="soc-live-badge"><span class="pulse-dot"></span> LIVE</div>
+      </div>
+
+      <!-- STAT CARDS -->
+      <div class="soc-stats-row" id="soc-stats-row">
+        <div class="soc-stat reveal-from-left" style="--rd:0ms">
+          <div class="ss-lbl" data-i18n="threats_blocked">THREATS BLOCKED</div>
+          <div class="ss-val neon" id="v-blocked">13,082</div>
+          <div class="ss-delta">▲ <span data-i18n="live_stream">live stream</span></div>
+        </div>
+        <div class="soc-stat sred reveal-from-left" style="--rd:80ms">
+          <div class="ss-lbl" data-i18n="active_incidents">ACTIVE INCIDENTS</div>
+          <div class="ss-val red-v" id="v-incidents">7</div>
+          <div class="ss-delta" style="color:var(--red)">▲ <span data-i18n="critical">critical</span></div>
+        </div>
+        <div class="soc-stat scyan reveal-from-right" style="--rd:160ms">
+          <div class="ss-lbl" data-i18n="packets_sec">PACKETS / SEC</div>
+          <div class="ss-val cyan-v" id="v-pps">56,796</div>
+          <div class="ss-delta">▲ <span data-i18n="inbound">inbound</span></div>
+        </div>
+        <div class="soc-stat spurple reveal-from-right" style="--rd:240ms">
+          <div class="ss-lbl" data-i18n="ai_confidence">AI CONFIDENCE</div>
+          <div class="ss-val purple-v" id="v-conf">94.8%</div>
+          <div class="ss-delta">neural-core</div>
+        </div>
+      </div>
+
+      <!-- MAP + FEED -->
+      <div class="soc-row-2">
+        <div class="soc-panel reveal-from-left" style="--rd:300ms" id="panel-map">
+          <div class="panel-h">
+            <span>◉ <span data-i18n="attack_map">REAL-TIME GLOBAL ATTACK MAP</span></span>
+            <span class="live-pill">LIVE</span>
+          </div>
+          <div class="map-wrap">
+            <canvas id="worldmap"></canvas>
+            <div class="scanline"></div>
+          </div>
+        </div>
+        <div class="soc-panel reveal-from-right" style="--rd:400ms" id="panel-feed">
+          <div class="panel-h">
+            <span>⚡ <span data-i18n="threat_feed">LIVE THREAT FEED</span></span>
+            <span class="live-pill">STREAMING</span>
+          </div>
+          <div class="soc-feed" id="feed-main"></div>
+        </div>
+      </div>
+
+      <!-- BRAIN + RADAR + AI FEED -->
+      <div class="soc-row-3">
+        <div class="soc-panel reveal-from-bottom" style="--rd:450ms" id="panel-brain">
+          <div class="panel-h"><span>🧠 <span data-i18n="neural_corr">NEURAL CORRELATION</span></span><span class="live-pill">AI</span></div>
+          <div class="panel-b"><canvas id="brain-canvas"></canvas></div>
+        </div>
+        <div class="soc-panel reveal-from-bottom" style="--rd:530ms" id="panel-radar">
+          <div class="panel-h"><span>📡 <span data-i18n="threat_radar">THREAT RADAR</span></span><span class="live-pill">SCAN</span></div>
+          <div class="panel-b"><canvas id="radar-canvas"></canvas></div>
+        </div>
+        <div class="soc-panel reveal-from-bottom" style="--rd:600ms" id="panel-ai-feed">
+          <div class="panel-h"><span>🤖 <span data-i18n="ai_feed">AI DECISION FEED</span></span><span class="live-pill">LIVE</span></div>
+          <div class="soc-feed short" id="feed-ai"></div>
+        </div>
+      </div>
+
+      <!-- EXPLAIN SECTION -->
+      <div class="soc-explain reveal-from-bottom" style="--rd:680ms">
+        <div class="soc-explain-h" data-i18n="soc_explain_title">WHAT YOU ARE LOOKING AT</div>
+        <p class="soc-explain-lead" data-i18n="soc_explain_lead">The Security Operations Center Overview is the platform's main command screen.</p>
+        <div class="soc-explain-grid">
+          <div class="soc-ex-card"><div class="sx-h" data-i18n="soc_e1_h">Threats Blocked</div><div class="sx-b" data-i18n="soc_e1_b">…</div></div>
+          <div class="soc-ex-card"><div class="sx-h" data-i18n="soc_e2_h">Active Incidents</div><div class="sx-b" data-i18n="soc_e2_b">…</div></div>
+          <div class="soc-ex-card"><div class="sx-h" data-i18n="soc_e3_h">Packets / Sec</div><div class="sx-b" data-i18n="soc_e3_b">…</div></div>
+          <div class="soc-ex-card"><div class="sx-h" data-i18n="soc_e4_h">AI Confidence</div><div class="sx-b" data-i18n="soc_e4_b">…</div></div>
+          <div class="soc-ex-card"><div class="sx-h" data-i18n="soc_e5_h">Real-Time Global Attack Map</div><div class="sx-b" data-i18n="soc_e5_b">…</div></div>
+          <div class="soc-ex-card"><div class="sx-h" data-i18n="soc_e6_h">Live Threat Feed</div><div class="sx-b" data-i18n="soc_e6_b">…</div></div>
+          <div class="soc-ex-card"><div class="sx-h" data-i18n="soc_e7_h">Neural Correlation</div><div class="sx-b" data-i18n="soc_e7_b">…</div></div>
+          <div class="soc-ex-card"><div class="sx-h" data-i18n="soc_e8_h">Threat Radar</div><div class="sx-b" data-i18n="soc_e8_b">…</div></div>
+          <div class="soc-ex-card"><div class="sx-h" data-i18n="soc_e9_h">AI Decision Feed</div><div class="sx-b" data-i18n="soc_e9_b">…</div></div>
+        </div>
+      </div>
+
+    </div><!-- end soc-wrap -->
+  </div><!-- end exp-0 -->
+
+  <!-- ── EXPANDED BLOCK 1: AI Pipeline ── -->
+  <div id="exp-1" class="exp-block">
+    <div class="pl-wrap">
+
+      <div class="pl-head reveal-from-top">
+        <div>
+          <h1 class="pl-title" data-i18n="pipeline_title">AI LEARNING</h1>
+          <div class="pl-sub" data-i18n="pipeline_sub">NETWORK TRAFFIC ATTACK DETECTION — AUTOMATED TRAINING PIPELINE</div>
+        </div>
+        <div class="soc-live-badge" style="border-color:rgba(182,107,255,.3);color:var(--purple);background:rgba(182,107,255,.05)"><span class="pulse-dot" style="background:var(--purple);box-shadow:0 0 10px var(--purple)"></span> IDLE</div>
+      </div>
+
+      <p class="pl-intro reveal-from-top" style="--rd:60ms" data-i18n="pipeline_intro_lead">The AI Pipeline is the background process responsible for producing the very models the detection engine relies on.</p>
+
+      <!-- STAT CARDS -->
+      <div class="soc-stats-row" id="pl-stats-row">
+        <div class="soc-stat spurple reveal-from-left" style="--rd:0ms">
+          <div class="ss-lbl" data-i18n="pl_total_runs">TOTAL RUNS</div>
+          <div class="ss-val purple-v" id="pl-v-runs">0</div>
+          <div class="ss-delta" data-i18n="pl_total_runs_s">pipeline executions</div>
+        </div>
+        <div class="soc-stat reveal-from-left" style="--rd:80ms">
+          <div class="ss-lbl" data-i18n="pl_datasets">DATASETS FOUND</div>
+          <div class="ss-val neon" id="pl-v-datasets">0</div>
+          <div class="ss-delta" data-i18n="pl_datasets_s">last run</div>
+        </div>
+        <div class="soc-stat scyan reveal-from-right" style="--rd:160ms">
+          <div class="ss-lbl" data-i18n="pl_cleaned">FILES CLEANED</div>
+          <div class="ss-val cyan-v" id="pl-v-cleaned">0</div>
+          <div class="ss-delta" data-i18n="pl_cleaned_s">CSV processed</div>
+        </div>
+        <div class="soc-stat reveal-from-right" style="--rd:240ms">
+          <div class="ss-lbl" data-i18n="pl_training">TRAINING</div>
+          <div class="ss-val neon" id="pl-v-training">—</div>
+          <div class="ss-delta" data-i18n="pl_training_s">last run result</div>
+        </div>
+      </div>
+
+      <!-- STAGES -->
+      <div class="soc-panel reveal-from-bottom pl-stages-panel" style="--rd:320ms">
+        <div class="panel-h">
+          <span>🧬 <span data-i18n="pl_stages_h">PIPELINE STAGES</span></span>
+          <span class="live-pill" style="color:var(--muted);border-color:rgba(107,138,166,.3);background:rgba(107,138,166,.06)">IDLE</span>
+        </div>
+        <div class="pl-stages-row">
+
+          <div class="pl-stage-card" id="pl-stage-1">
+            <div class="pl-stage-icon" style="color:var(--cyan)">🔍</div>
+            <div class="pl-stage-num">STAGE 1</div>
+            <div class="pl-stage-title" data-i18n="pl_s1_title">Advisor</div>
+            <div class="pl-stage-sub" data-i18n="pl_s1_sub">Kaggle search + LLM dataset selection</div>
+          </div>
+
+          <div class="pl-stage-arrow">›</div>
+
+          <div class="pl-stage-card" id="pl-stage-2">
+            <div class="pl-stage-icon" style="color:var(--purple)">⬇</div>
+            <div class="pl-stage-num">STAGE 2</div>
+            <div class="pl-stage-title" data-i18n="pl_s2_title">Downloader</div>
+            <div class="pl-stage-sub" data-i18n="pl_s2_sub">Download selected datasets from Kaggle</div>
+          </div>
+
+          <div class="pl-stage-arrow">›</div>
+
+          <div class="pl-stage-card" id="pl-stage-3">
+            <div class="pl-stage-icon" style="color:var(--neon)">🧹</div>
+            <div class="pl-stage-num">STAGE 3</div>
+            <div class="pl-stage-title" data-i18n="pl_s3_title">Cleaner</div>
+            <div class="pl-stage-sub" data-i18n="pl_s3_sub">Validate and clean CSV files</div>
+          </div>
+
+          <div class="pl-stage-arrow">›</div>
+
+          <div class="pl-stage-card" id="pl-stage-4">
+            <div class="pl-stage-icon" style="color:var(--orange)">🧠</div>
+            <div class="pl-stage-num">STAGE 4</div>
+            <div class="pl-stage-title" data-i18n="pl_s4_title">Trainer</div>
+            <div class="pl-stage-sub" data-i18n="pl_s4_sub">LightGBM + Stacking Ensemble</div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- STAGE EXPLANATIONS -->
+      <div class="soc-row-2 pl-explain-row">
+        <div class="soc-panel reveal-from-left" style="--rd:380ms">
+          <div class="panel-h"><span>🔍 <span data-i18n="pl_s1_h">Stage 1 — Advisor</span></span></div>
+          <div class="pl-explain-body" data-i18n="pl_s1_b">Searches a public dataset platform directly for real, currently existing network-attack datasets.</div>
+        </div>
+        <div class="soc-panel reveal-from-right" style="--rd:420ms">
+          <div class="panel-h"><span>⬇ <span data-i18n="pl_s2_h">Stage 2 — Downloader</span></span></div>
+          <div class="pl-explain-body" data-i18n="pl_s2_b">Retrieves every verified dataset selected in the previous stage.</div>
+        </div>
+      </div>
+      <div class="soc-row-2 pl-explain-row">
+        <div class="soc-panel reveal-from-left" style="--rd:460ms">
+          <div class="panel-h"><span>🧹 <span data-i18n="pl_s3_h">Stage 3 — Cleaner</span></span></div>
+          <div class="pl-explain-body" data-i18n="pl_s3_b">Applies a sequence of data-quality passes to every downloaded file.</div>
+        </div>
+        <div class="soc-panel reveal-from-right" style="--rd:500ms">
+          <div class="panel-h"><span>🧠 <span data-i18n="pl_s4_h">Stage 4 — Trainer</span></span></div>
+          <div class="pl-explain-body" data-i18n="pl_s4_b">Trains a LightGBM model on every cleaned dataset.</div>
+        </div>
+      </div>
+
+      <!-- EXPORT + HOT RELOAD -->
+      <div class="soc-row-2 pl-explain-row">
+        <div class="soc-panel reveal-from-bottom" style="--rd:540ms">
+          <div class="panel-h"><span>📦 <span data-i18n="pl_export_h">MODEL EXPORT & VERSIONING</span></span></div>
+          <div class="pl-explain-body" data-i18n="pl_export_b">The finished model is copied into the exact location the live detection engine watches.</div>
+        </div>
+        <div class="soc-panel reveal-from-bottom" style="--rd:600ms">
+          <div class="panel-h">
+            <span>♻ <span data-i18n="pl_hotreload_h">HOT RELOAD MECHANISM</span></span>
+            <span class="live-pill" data-i18n="pl_hotreload_sub">Zero-downtime</span>
+          </div>
+          <div class="pl-explain-body" data-i18n="pl_hotreload_b">A small signal file is created the moment export completes.</div>
+        </div>
+      </div>
+
+      <!-- LOG -->
+      <div class="soc-panel reveal-from-bottom" style="--rd:660ms">
+        <div class="panel-h">
+          <span>📜 <span data-i18n="pl_log_h">PIPELINE LOG</span></span>
+          <span class="live-pill">AUTO</span>
+        </div>
+        <div class="pl-log-box" id="pl-log-box"></div>
+      </div>
+
+    </div><!-- end pl-wrap -->
+  </div><!-- end exp-1 -->
+
+  <!-- ── EXPANDED BLOCK 2: AI Copilot ── -->
+  <div id="exp-2" class="exp-block">
+    <div class="cp-wrap">
+
+      <div class="pl-head reveal-from-top">
+        <div>
+          <h1 class="pl-title" style="color:var(--cyan)" data-i18n="copilot_title">AI SECURITY COPILOT</h1>
+          <div class="pl-sub" data-i18n="copilot_sub">CONVERSATIONAL ANALYST ASSISTANT</div>
+        </div>
+        <div class="soc-live-badge" style="border-color:rgba(0,229,255,.3);color:var(--cyan);background:rgba(0,229,255,.05)"><span class="pulse-dot" style="background:var(--cyan);box-shadow:0 0 10px var(--cyan)"></span> <span id="cp-mode-badge" data-i18n="cp_expert_mode">EXPERT</span></div>
+      </div>
+
+      <p class="pl-intro reveal-from-top" style="--rd:60ms" data-i18n="copilot_intro_lead">The AI Copilot is a standalone assistant giving the analyst a natural-language way to ask questions.</p>
+
+      <div class="cp-shell reveal-from-bottom" style="--rd:160ms">
+
+        <!-- SIDEBAR -->
+        <div class="cp-sidebar">
+          <button class="cp-newchat" data-i18n="cp_new_chat">+ NEW CHAT</button>
+          <div class="cp-sec-label" data-i18n="cp_conversations">CONVERSATIONS</div>
+          <div class="cp-conv-list" id="cp-conv-list"></div>
+          <div class="cp-sec-label" data-i18n="cp_models">MODELS</div>
+          <div class="cp-models-list" id="cp-models-list"></div>
+          <button class="cp-addmodel" data-i18n="cp_add_model">+ Add Model</button>
+        </div>
+
+        <!-- CHAT AREA -->
+        <div class="cp-chat-area">
+          <div class="cp-chat-header">
+            <select class="cp-model-select" id="cp-model-select">
+              <option>gemini-2.5-flash</option>
+              <option>claude</option>
+              <option>gpt-4o</option>
+            </select>
+          </div>
+          <div class="cp-messages" id="cp-messages"></div>
+          <div class="cp-input-row">
+            <input type="text" class="cp-input" id="cp-input-fake" disabled placeholder="Ask the AI Copilot about your network…"/>
+            <button class="cp-expert-toggle active" id="cp-expert-toggle">
+              <span class="cp-dot"></span> <span data-i18n="cp_expert_mode">EXPERT</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ANNOTATED EXPLANATIONS -->
+      <div class="soc-row-2 pl-explain-row" style="margin-top:8px">
+        <div class="soc-panel reveal-from-left" style="--rd:380ms">
+          <div class="panel-h"><span>① <span data-i18n="cp_e1_h">Expert Mode Toggle</span></span></div>
+          <div class="pl-explain-body" data-i18n="cp_e1_b">On by default — every typed message is automatically wrapped in a cybersecurity-expert prompt.</div>
+        </div>
+        <div class="soc-panel reveal-from-right" style="--rd:420ms">
+          <div class="panel-h"><span>② <span data-i18n="cp_e2_h">Active Language Model Selector</span></span></div>
+          <div class="pl-explain-body" data-i18n="cp_e2_b">Multiple providers configurable, switchable per conversation.</div>
+        </div>
+      </div>
+      <div class="soc-row-2 pl-explain-row">
+        <div class="soc-panel reveal-from-left" style="--rd:460ms">
+          <div class="panel-h"><span>③ <span data-i18n="cp_e3_h">Persistent Conversation History</span></span></div>
+          <div class="pl-explain-body" data-i18n="cp_e3_b">Saved to disk, reloaded on next launch.</div>
+        </div>
+        <div class="soc-panel reveal-from-right" style="--rd:500ms">
+          <div class="panel-h"><span>④ <span data-i18n="cp_e4_h">Configured Models List</span></span></div>
+          <div class="pl-explain-body" data-i18n="cp_e4_b">Saved persistently; built-in and custom providers supported.</div>
+        </div>
+      </div>
+      <div class="soc-row-2 pl-explain-row">
+        <div class="soc-panel reveal-from-left" style="--rd:540ms">
+          <div class="panel-h"><span>⑤ <span data-i18n="cp_e5_h">Short Displayed History</span></span></div>
+          <div class="pl-explain-body" data-i18n="cp_e5_b">Only the short original request is saved to chat history.</div>
+        </div>
+        <div class="soc-panel reveal-from-right" style="--rd:580ms">
+          <div class="panel-h"><span>⑥ <span data-i18n="cp_e6_h">Status Bar</span></span></div>
+          <div class="pl-explain-body" data-i18n="cp_e6_b">Confirms the current operating mode.</div>
+        </div>
+      </div>
+
+      <!-- SOAR LINK + REPORT -->
+      <div class="soc-row-2 pl-explain-row">
+        <div class="soc-panel reveal-from-bottom" style="--rd:620ms">
+          <div class="panel-h"><span>🔗 <span data-i18n="cp_link_h">READ-ONLY LINK TO THE SOAR ENGINE</span></span></div>
+          <div class="pl-explain-body" data-i18n="cp_link_b">Reads recent threat contexts directly from the SOAR database, strictly read-only.</div>
+        </div>
+        <div class="soc-panel reveal-from-bottom" style="--rd:660ms">
+          <div class="panel-h"><span>📡 <span data-i18n="cp_report_h">Network Status Report</span></span></div>
+          <div class="pl-explain-body" data-i18n="cp_report_b">One click, full situational summary, no typing required.</div>
+        </div>
+      </div>
+
+    </div><!-- end cp-wrap -->
+  </div><!-- end exp-2 -->
+
+</div><!-- end expanded-overlay -->
+
+<!-- ═══════════════════════════════ SCRIPTS ═══ -->
+<script src="js/i18n.js"></script>
+<script src="js/matrix.js"></script>
+<script src="js/soc_dashboard.js"></script>
+<script src="js/pipeline.js"></script>
+<script src="js/copilot.js"></script>
+<script src="js/carousel.js"></script>
+<script src="js/intro.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
