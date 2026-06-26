@@ -20,13 +20,13 @@
   ════════════════════════════════════ */
   let renderer, scene, camera, animId;
   let camZ = 80;
-  let tunnelSpeed = IS_MOB ? 0.9 : 0.50;
+  let tunnelSpeed = IS_MOB ? 1.2 : 0.50;
   /* Fewer rings/points on mobile = less GPU load.
      Mobile also skips every other frame (see _loopFrame check below),
      so it needs a noticeably higher top speed and faster ramp-up to
      actually feel as fast as desktop rather than sluggish. */
-  const MAX_SPEED  = IS_MOB ? 6.5  : 4.5;
-  const SPEED_STEP = IS_MOB ? 0.03 : 0.012;
+  const MAX_SPEED  = IS_MOB ? 8.5  : 4.5;
+  const SPEED_STEP = IS_MOB ? 0.045 : 0.012;
   const RINGS  = IS_MOB ? 70  : 120;
   const PTS    = IS_MOB ? 20  : 32;
   const RADIUS = 14;
